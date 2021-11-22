@@ -11,4 +11,10 @@ func HandleRoute(router *mux.Router) {
 
 	// get single product
 	router.HandleFunc("/{id}", controller.Show).Methods("GET")
+
+	// add product
+	router.HandleFunc("/store", controller.Store).Methods("POST")
+
+	// update product
+	router.HandleFunc("/update/{id}", controller.Update).Methods("PUT")
 }

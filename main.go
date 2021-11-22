@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"log"
@@ -14,6 +15,8 @@ func main() {
 	initDb()
 	router := mux.NewRouter()
 	routes.HandleRoute(router)
+
+	fmt.Println("http://localhost:3000 already exist")
 	log.Fatal(http.ListenAndServe(":3000", router))
 }
 
