@@ -15,7 +15,7 @@ func Index(rw http.ResponseWriter, r *http.Request) {
 	var products []models.Product
 
 	databse.Connector.Find(&products)
-	app.Response(rw, 200)
+	app.Response(rw, 200, "")
 	json.NewEncoder(rw).Encode(products)
 }
 
@@ -25,7 +25,7 @@ func Show(rw http.ResponseWriter, r *http.Request) {
 	var product models.Product
 
 	databse.Connector.First(&product, id)
-	app.Response(rw, 200)
+	app.Response(rw, 200, "")
 	json.NewEncoder(rw).Encode(product)
 }
 
@@ -38,12 +38,12 @@ func Store(rw http.ResponseWriter, r *http.Request) {
 	// store body in product
 	err := json.Unmarshal(body, &product)
 	if err != nil {
-		fmt.Println("can't unmarshal body:", err)
+		fmt.Println("can't unmarshal body:", err, "")
 	}
 
 	// store body in table(product)
 	databse.Connector.Create(&product)
-	app.Response(rw, 201)
+	app.Response(rw, 201, "successfully create.")
 	json.NewEncoder(rw).Encode(product)
 }
 
@@ -54,16 +54,24 @@ func Update(rw http.ResponseWriter, r *http.Request) {
 
 	body, _ := ioutil.ReadAll(r.Body)
 
-	// get request
-	var products []models.Product
 	var product models.Product
 
-	databse.Connector.First(&products, id)
-
 	err := json.Unmarshal(body, &product)
-	fmt.Println(product)
+
 	if err != nil {
 		fmt.Println("can't unmarshal body:", err)
 	}
-	//databse.Connector.Update(map[string]interface{product.ID, product.Title, product.Body})
+	databse.Connector.Model(&product).Where("id =? ", id).Update(&product)
+	app.Response(rw, 200, "successfully update.")
+	json.NewEncoder(rw).Encode(product)
+}
+
+func Delete(rw http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	var product models.Product
+
+	databse.Connector.Model(&product).Delete(&product, "id =?", id)
+	app.Response(rw, 204, "successfully delete.")
 }

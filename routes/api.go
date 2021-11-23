@@ -17,4 +17,7 @@ func HandleRoute(router *mux.Router) {
 
 	// update product
 	router.HandleFunc("/update/{id}", controller.Update).Methods("PUT")
+
+	// remove product
+	router.HandleFunc("/delete/{id}", controller.Delete).Methods("DELETE")
 }
